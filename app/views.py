@@ -14,15 +14,30 @@ class CreateVcancyAPIView(APIView):
     def post(self, request):
         
         v = create_vacancy.create.run(args = request.data)
+        stat = status.HTTP_400_BAD_REQUEST
+        success = True
         if v.is_success:
             success = True
             result = 'Good.'
+            stat = status.HTTP_201_CREATED
+
         elif v.failed_because('not_validated'):
             result = 'Data not validated.'
-        # print(v)
-        # if v.failed_because("not_valid"):
-        #     print("Tamerlan")
-        return Response(result)
+            success = False
+
+        elif v.failed_because('user_exist'):
+            result = 'User is exist.'
+            success = False
+
+        elif v.failed_because('category_exist'):
+            result = 'Category is exist'
+            success = False
+
+        elif v.failed_because('repo_error'):
+            result = 'repo error'
+            success = False
+            
+        return Response({'success': success, 'result': result}, status=stat)
     
 
 class CreateUserAPIView(APIView):

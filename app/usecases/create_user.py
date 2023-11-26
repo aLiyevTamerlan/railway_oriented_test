@@ -20,6 +20,7 @@ class CreateUser:
     
     def check_user(self, ctx):
         user = self.user_repo.fecth_user_by_email(email=ctx.args.get('email'))
+        
         return Failure(reason="user_exists") if user else Success() 
 
 

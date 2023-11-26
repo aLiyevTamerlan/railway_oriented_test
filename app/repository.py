@@ -37,6 +37,7 @@ class UserRepository:
             email:str
     ):
         user = User.objects.filter(email=email).first()
+        print(email)
         return user
     
     def fetch_all_users(
